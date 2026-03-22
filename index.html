@@ -34,6 +34,11 @@
         h1, h2, p, button {
             letter-spacing: 0.02em;
         }
+
+        /* 이미지 로드 실패 시 이모티콘 크기 조정 */
+        .fallback-icon {
+            font-size: 4rem;
+        }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
@@ -50,13 +55,14 @@
         </div>
 
         <div class="p-8 text-center">
-            <!-- Character Image -->
-            <div class="relative w-40 h-40 mx-auto mb-4 flex items-center justify-center">
+            <!-- Character Image Container -->
+            <div class="relative w-48 h-48 mx-auto mb-4 flex items-center justify-center overflow-hidden">
+                <!-- 가장 확실한 Raw 주소로 변경했습니다 -->
                 <img id="pochacco-img" 
-                     src="https://github.com/handam715/pickabook/blob/main/pickabook.png?raw=true" 
+                     src="https://raw.githubusercontent.com/handam715/pickabook/main/pickabook.png" 
                      alt="Pochacco" 
-                     class="max-w-full max-h-full object-contain drop-shadow-lg"
-                     onerror="this.src='https://api.iconify.design/twemoji:dog-face.svg'">
+                     class="max-w-full max-h-full object-contain drop-shadow-xl transition-opacity duration-500"
+                     onerror="handleImageError(this)">
             </div>
 
             <!-- Status Message -->
@@ -133,6 +139,13 @@
         const resultArea = document.getElementById('result-area');
 
         lucide.createIcons();
+
+        // 이미지 오류 처리를 위한 함수
+        function handleImageError(img) {
+            img.onerror = null;
+            // 이미지가 정말 안 나올 경우를 대비해 텍스트나 큰 이모티콘으로 대체
+            img.parentElement.innerHTML = '<span class="text-6xl">🐶</span><p class="text-xs mt-2 text-slate-400">이미지 로딩 중...</p>';
+        }
 
         function updateStepText() {
             const texts = ["첫 번째 숫자를 뽑아볼까요?", "두 번째 숫자는 무엇일까요?", "마지막 숫자를 확인해요!", "오늘의 행운 번호 완성!"];
